@@ -1,0 +1,39 @@
+name: Actualizar datos del Mundial MotoGP
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: motogp-live-data
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar dependencias
+        run: python -m pip install requests
+      - name: Consultar resultados de MotoGP
+        run: python scripts/update_motogp_data.py
+      - name: Publicar JSON actualizado
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/motogp-live.json
+          if git diff --cached --quiet; then
+            echo "No hay cambios en los datos."
+          else
+            git commit -m "Actualizar datos del Mundial MotoGP"
+            git push
+          fi

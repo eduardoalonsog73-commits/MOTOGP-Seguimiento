@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#d6001c">
+<meta name="description" content="Noticias de MotoGP, clasificación por Gran Premio y vídeos. Aplicación instalable.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MotoGP">
+<title>Titulares MotoGP · Última semana</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--tx:#14171c;--mut:#5c6573;--bd:#dfe3e8;--ac:#d6001c;--chip:#e9ecf0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1014;--card:#171a21;--tx:#eceff4;--mut:#98a2b3;--bd:#2a2f3a;--ac:#ff3b52;--chip:#232834;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1014;--card:#171a21;--tx:#eceff4;--mut:#98a2b3;--bd:#2a2f3a;--ac:#ff3b52;--chip:#232834;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:20px 16px 8px;max-width:820px;margin:0 auto}
+h1{margin:0;font-size:1.5rem;letter-spacing:-.01em}
+h1 span{color:var(--ac)}
+.sub{color:var(--mut);font-size:.88rem;margin:4px 0 0}
+main{max-width:820px;margin:0 auto;padding:0 16px 32px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+input[type=search]{flex:1;min-width:180px;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit}
+button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--chip);color:var(--tx);border-radius:999px;padding:6px 13px}
+button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--ac);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.78rem;color:var(--mut);margin-bottom:4px}
+.tag{background:var(--chip);border-radius:999px;padding:1px 9px;font-weight:600}
+.card h2{font-size:1.05rem;margin:0 0 4px;line-height:1.3}
+.card p{margin:0 0 8px;color:var(--mut);font-size:.92rem}
+.card a{color:var(--ac);font-size:.85rem;text-decoration:none;font-weight:600}
+.card a:hover{text-decoration:underline}
+.count{color:var(--mut);font-size:.85rem;margin:0 0 10px}
+.note{border:1px dashed var(--bd);border-radius:10px;padding:10px 12px;color:var(--mut);font-size:.82rem;margin-top:18px}
+.empty{text-align:center;color:var(--mut);padding:30px 0}
+.tabs{max-width:820px;margin:8px auto 0;padding:0 16px;display:flex;gap:6px;border-bottom:1px solid var(--bd)}
+.tabs button{border-radius:10px 10px 0 0;border-bottom:none;padding:9px 16px;background:transparent;font-weight:600;color:var(--mut)}
+.tabs button.on{background:var(--card);color:var(--tx);border-color:var(--bd);box-shadow:inset 0 3px 0 var(--ac)}
+main[hidden]{display:none}
+.wrap{overflow-x:auto;border:1px solid var(--bd);border-radius:12px;background:var(--card);margin-top:14px}
+table.g{border-collapse:separate;border-spacing:0;min-width:1250px;width:100%}
+table.g th,table.g td{padding:0;border-bottom:1px solid var(--bd);border-right:1px solid var(--bd);text-align:center;font-size:.82rem}
+table.g thead th{padding:8px 4px;color:var(--mut);font-weight:700;position:sticky;top:0;background:var(--card)}
+table.g th.rd{position:sticky;left:0;z-index:2;background:var(--card);text-align:left;padding:8px 12px;min-width:130px;font-weight:700}
+table.g td.tt{min-width:96px;padding:6px;font-size:.78rem;color:var(--mut)}
+.c{position:relative;height:58px;min-width:58px;overflow:hidden}
+.c i{position:absolute;left:0;bottom:0;height:100%;opacity:.22}
+.c b{position:relative;display:block;padding-top:8px;font-size:.95rem}
+.c small{position:relative;display:block;color:var(--mut);font-size:.7rem}
+.c svg{position:absolute;top:3px;right:3px;width:16px;height:16px}
+.lg{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--mut);margin:12px 0 0;align-items:center}
+.lg span{display:inline-flex;gap:5px;align-items:center}
+.lg svg{width:16px;height:16px}
+.lk{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:10px 0 18px}
+.lk a{display:block;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;color:var(--tx);text-decoration:none;font-weight:700}
+.lk a small{display:block;font-weight:400;color:var(--mut);font-size:.78rem;margin-top:2px}
+.lk a:hover{border-color:var(--ac)}
+.lk a b{color:var(--ac)}
+.app-actions button{padding:8px 13px}
+.app-actions #updateStatus{font-size:.78rem}
+@media (display-mode: standalone){#installApp{display:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Titulares <span>MotoGP</span> · Última semana</h1>
+  <p class="sub">Noticias de MotoGP actualizadas desde Internet al abrir la aplicación.</p>
+</header>
+<div class="app-actions" style="max-width:820px;margin:10px auto 0;padding:0 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+<button id="installApp" hidden class="on">Instalar aplicación</button>
+<button id="refreshNews">Actualizar noticias</button>
+<span id="updateStatus" class="sub" role="status" aria-live="polite">Preparando actualización…</span>
+</div>
+<nav class="tabs"><button class="on" id="t1">Titulares</button><button id="t2">Mundial por GP</button><button id="t3">Vídeos TikTok</button></nav>
+<main id="p1">
+  <div class="tools">
+    <input type="search" id="q" placeholder="Buscar piloto, equipo o tema…" aria-label="Buscar">
+    <button id="ord" title="Cambiar orden">Más recientes primero</button>
+    <button id="cp" title="Copiar lista">Copiar resumen</button>
+  </div>
+  <div class="chips" id="chips"></div>
+  <p class="count" id="count"></p>
+  <div id="list"></div>
+  <div class="note">Las noticias se consultan al abrir. La clasificación y el gráfico se descargan al abrir desde un archivo actualizado automáticamente por GitHub Actions cada 15 minutos. Si no hay conexión, se conserva la última clasificación descargada en este dispositivo.</div>
+</main>
+<main id="p2" hidden>
+  <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:16px">
+    <div><h2 style="font-size:1.15rem;margin:0">Mundial de pilotos · MotoGP</h2><p class="sub" id="worldMeta">Conectando con los datos oficiales…</p></div>
+    <button id="refreshWorld" class="on">Actualizar Mundial</button>
+  </div>
+  <p class="sub" id="worldStatus" role="status" aria-live="polite">Consultando clasificación y resultados…</p>
+  <h3 style="font-size:1rem;margin:18px 0 8px">Clasificación actual</h3>
+  <div class="wrap"><table class="g" id="standingsTable" style="min-width:650px"></table></div>
+  <h3 style="font-size:1rem;margin:22px 0 0">Evolución de puntos · Top 5</h3>
+  <p class="sub">Puntos acumulados después de cada Gran Premio. Se suman los puntos oficiales de Sprint y carrera cuando están disponibles.</p>
+  <div class="lg" id="lg"></div>
+  <div class="lg" id="lr"></div>
+  <div class="wrap" style="padding:6px 0"><div id="lc"></div></div>
+  <h3 style="font-size:1rem;margin:22px 0 0">Puntos por Gran Premio · Top 5</h3>
+  <div class="wrap"><table class="g" id="gt"></table></div>
+  <div class="note">Fuente: API de resultados de MotoGP (Pulselive), utilizada por la web oficial. Los datos se solicitan directamente desde el navegador; la disponibilidad depende de que el proveedor permita peticiones desde GitHub Pages. La última descarga correcta se guarda en el dispositivo para consulta sin conexión. <a href="https://stats.motogp.com/en/world-standing" target="_blank" rel="noopener">Consultar clasificación oficial de MotoGP</a>.</div>
+</main>
+<main id="p3" hidden>
+  <h2 style="font-size:1.15rem;margin:16px 0 0">Vídeos de MotoGP en TikTok</h2>
+  <p class="sub">Accesos directos a las páginas de TikTok que muestran siempre los vídeos más recientes. Cada enlace se abre en una pestaña nueva.</p>
+  <h3 style="font-size:1rem;margin:18px 0 0">Canal oficial</h3>
+  <div class="lk">
+    <a href="https://www.tiktok.com/@motogp" target="_blank" rel="noopener"><b>@motogp</b> · MotoGP™ oficial<small>Resúmenes, momentos del fin de semana y reacciones de los pilotos</small></a>
+  </div>
+  <h3 style="font-size:1rem;margin:0">Etiquetas</h3>
+  <div class="lk">
+    <a href="https://www.tiktok.com/tag/motogp" target="_blank" rel="noopener"><b>#motogp</b><small>Todo el contenido general del campeonato</small></a>
+    <a href="https://www.tiktok.com/tag/qatargp" target="_blank" rel="noopener"><b>#qatargp</b><small>El Gran Premio de Catar, este fin de semana</small></a>
+    <a href="https://www.tiktok.com/tag/malaysiangp" target="_blank" rel="noopener"><b>#malaysiangp</b><small>Lo mejor de Sepang, la carrera más reciente</small></a>
+    <a href="https://www.tiktok.com/tag/marcmarquez" target="_blank" rel="noopener"><b>#marcmarquez</b><small>El líder del Mundial</small></a>
+    <a href="https://www.tiktok.com/tag/pedroacosta" target="_blank" rel="noopener"><b>#pedroacosta</b><small>Subcampeón en Malasia</small></a>
+    <a href="https://www.tiktok.com/tag/jorgemartin" target="_blank" rel="noopener"><b>#jorgemartin</b><small>Segundo del Mundial, en recuperación</small></a>
+  </div>
+  <div class="note">TikTok puede pedir iniciar sesión o variar el contenido según el país y el dispositivo. Los enlaces dirigen a páginas actualizadas por TikTok, por lo que no requieren mantenimiento en esta aplicación.</div>
+</main>
+<script>
+var N=[];
+var NEWS_CACHE_KEY="motogp-news-v2";
+var NEWS_ENDPOINT="https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent("https://news.google.com/rss/search?q=Motogp%20when%3A7d&hl=es&gl=ES&ceid=ES:es");
+
+var cat="Todos",asc=false,q="";
+var $=function(i){return document.getElementById(i)};
+function fmt(d){var p=d.split("-");var m=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];return +p[2]+" "+m[+p[1]-1]}
+function esc(s){return s.replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function cur(){
+  var r=N.filter(function(n){return (cat==="Todos"||n.c===cat)&&(n.t+" "+n.s+" "+n.c).toLowerCase().indexOf(q)>-1});
+  r.sort(function(a,b){return asc?a.d.localeCompare(b.d):b.d.localeCompare(a.d)});
+  return r;
+}
+function chips(){
+  var cs=["Todos"];N.forEach(function(n){if(cs.indexOf(n.c)<0)cs.push(n.c)});
+  $("chips").innerHTML=cs.map(function(c){return '<button class="'+(c===cat?"on":"")+'" data-c="'+esc(c)+'">'+esc(c)+'</button>'}).join("");
+}
+function render(){
+  var r=cur();
+  $("count").textContent=r.length+" titular"+(r.length===1?"":"es");
+  $("list").innerHTML=r.length?r.map(function(n){return '<article class="card"><div class="meta"><span class="tag">'+esc(n.c)+'</span><span>'+fmt(n.d)+'</span><span>· '+esc(n.f)+'</span></div><h2>'+esc(n.t)+'</h2><p>'+esc(n.s)+'</p><a href="'+n.u+'" target="_blank" rel="noopener">Leer en la fuente →</a></article>'}).join(""):'<div class="empty">No hay noticias disponibles para esta búsqueda. Prueba a actualizar.</div>';
+  chips();
+}
+$("chips").addEventListener("click",function(e){var c=e.target.getAttribute("data-c");if(c){cat=c;render()}});
+$("q").addEventListener("input",function(e){q=e.target.value.toLowerCase().trim();render()});
+$("ord").addEventListener("click",function(){asc=!asc;this.textContent=asc?"Más antiguos primero":"Más recientes primero";render()});
+$("cp").addEventListener("click",function(){
+  var b=this,t=cur().map(function(n){return "• "+fmt(n.d)+" — "+n.t+" ("+n.f+")"}).join("\n");
+  try{navigator.clipboard.writeText(t).then(function(){b.textContent="¡Copiado!"},function(){b.textContent="No disponible"})}catch(e){b.textContent="No disponible"}
+  setTimeout(function(){b.textContent="Copiar resumen"},1800);
+});
+
+function setStatus(t){var el=$("updateStatus");if(el)el.textContent=t}
+function safeUrl(u){try{var x=new URL(u);return x.protocol==="https:"?x.href:"#"}catch(e){return "#"}}
+function cleanText(s){var d=document.createElement("div");d.innerHTML=s||"";return (d.textContent||"").replace(/\s+/g," ").trim()}
+function showNews(items){
+  N=items.map(function(x){
+    var date=new Date(x.pubDate||Date.now());
+    return {d:isNaN(date.getTime())?new Date().toISOString().slice(0,10):date.toISOString().slice(0,10),
+      c:"Noticias",t:cleanText(x.title)||"Noticia de MotoGP",
+      s:cleanText(x.description||x.content||"").slice(0,320),
+      f:cleanText(x.author||"Google Noticias"),u:safeUrl(x.link)};
+  }).filter(function(x){return x.u!=="#"&&x.t;});
+  render();
+}
+function loadSavedNews(){
+  try{var saved=JSON.parse(localStorage.getItem(NEWS_CACHE_KEY)||"[]");if(saved.length)showNews(saved)}catch(e){}
+}
+function refreshNews(){
+  setStatus("Consultando noticias…");
+  var controller=window.AbortController?new AbortController():null;
+  var timeout=setTimeout(function(){if(controller)controller.abort()},12000);
+  fetch(NEWS_ENDPOINT,{cache:"no-store",signal:controller?controller.signal:undefined})
+    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
+    .then(function(data){
+      if(data.status!=="ok"||!Array.isArray(data.items))throw new Error("Feed no disponible");
+      var items=data.items.slice(0,30);
+      if(!items.length)throw new Error("No hay noticias en el feed");
+      localStorage.setItem(NEWS_CACHE_KEY,JSON.stringify(items));
+      showNews(items);
+      setStatus("Actualizado: "+new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}));
+    })
+    .catch(function(){
+      if(!N.length)loadSavedNews();
+      setStatus(N.length?"Sin conexión: mostrando noticias guardadas":"No se pudieron cargar noticias. Comprueba tu conexión.");
+    }).finally(function(){clearTimeout(timeout)});
+}
+$("refreshNews").addEventListener("click",refreshNews);
+loadSavedNews();
+refreshNews();
+
+var GP=[],R=[],STANDINGS=[],WORLD_CACHE_KEY="motogp-world-live-v3";
+var riderColors=["#d6001c","#2f6bff","#12a150","#f57c00","#8e44ad"];
+var CL={1:["#f5b301","Primero"],2:["#a8b0ba","Segundo"],3:["#b87333","Tercero"]};
+function worldStatus(t){var el=$("worldStatus");if(el)el.textContent=t;}
+function num(x){var n=Number(x);return Number.isFinite(n)?n:0;}
+function safeText(x){return String(x==null?"":x).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function cup(m){return '<svg viewBox="0 0 24 24" aria-label="'+CL[m][1]+'"><path fill="'+CL[m][0]+'" stroke="rgba(0,0,0,.4)" stroke-width=".8" d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3V3zM6 7v1a2 2 0 0 0 1.2 1.8A5 5 0 0 1 7 8V7H6zm12 0h-1v1c0 .6-.1 1.2-.2 1.8A2 2 0 0 0 18 8V7z"/></svg>';}
+function makeWorldModel(data){
+ var sorted=(data.standings||[]).slice().sort(function(a,b){return num(a.position)-num(b.position);});
+ var history=(data.events||[]).slice().sort(function(a,b){return String(a.date_start||"").localeCompare(String(b.date_start||""));});
+ var leaders=sorted.slice(0,5).map(function(x,i){var id=String(x.id||"");return {id:id,n:x.name||"Piloto",team:x.team||"",k:riderColors[i],p:[],r:[]};});
+ leaders.forEach(function(p){history.forEach(function(ev){p.p.push(num(ev.points&&ev.points[p.id]));p.r.push(num(ev.podiums&&ev.podiums[p.id]));});});
+ return {standings:sorted,events:history,riders:leaders,updatedAt:data.updated_at||new Date().toISOString(),season:data.season||new Date().getFullYear()};
+}
+function renderStandings(){
+ var rows=STANDINGS;var h='<thead><tr><th class="rd">Piloto</th><th>Equipo</th><th>Puntos</th><th>Distancia</th></tr></thead><tbody>';
+ rows.forEach(function(x){var gap=rows[0]?num(rows[0].points)-num(x.points):0;h+='<tr><th class="rd">'+num(x.position)+'. '+safeText(x.name)+'</th><td style="padding:8px;text-align:left;min-width:180px">'+safeText(x.team||"")+'</td><td style="padding:8px;font-weight:700">'+num(x.points)+'</td><td style="padding:8px;color:var(--mut)">'+(gap?"-"+gap:"—")+'</td></tr>';});
+ $("standingsTable").innerHTML=h+'</tbody>';
+}
+function renderWorldGrid(){
+ var h='<thead><tr><th class="rd">Piloto</th>'+GP.map(function(g,i){return '<th title="'+safeText(g.name)+'">'+(i+1)+'<br>'+safeText(g.short)+'</th>';}).join('')+'<th>Total</th></tr></thead><tbody>';
+ R.forEach(function(p){var total=0;h+='<tr><th class="rd" style="border-left:4px solid '+p.k+'">'+safeText(p.n)+'</th>';p.p.forEach(function(v,i){total+=v;var m=p.r[i];h+='<td><div class="c" title="'+safeText(GP[i].name)+': '+total+' puntos"><i style="width:'+Math.min(100,Math.round(total/Math.max(1,STANDINGS[0].points)*100))+'%;background:'+p.k+'"></i>'+(m?cup(m):'')+'<b>'+total+'</b><small>'+(v?'+'+v:'—')+'</small></div></td>';});h+='<td class="tt">'+total+'</td></tr>';});
+ $("gt").innerHTML=h+'</tbody>';
+ $("lg").innerHTML=[1,2,3].map(function(m){return '<span>'+cup(m)+' '+CL[m][1]+' en el GP</span>';}).join('');
+}
+function lineChart(){
+ if(!GP.length||!R.length){$("lc").innerHTML='<p class="sub" style="padding:12px">Todavía no hay resultados de Grandes Premios disponibles.</p>';return;}
+ var cw=74,L=46,T=30,B=46,H=520,ym=Math.max(50,Math.ceil(STANDINGS[0].points/100)*100),W=L+cw*GP.length+24,ph=H-T-B;
+ function X(i){return L+cw*i+cw/2;}function Y(v){return T+(1-v/ym)*ph;}
+ var svg='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Evolución de puntos acumulados" style="display:block">';
+ for(var v=0;v<=ym;v+=Math.max(50,Math.ceil(ym/4/50)*50)){svg+='<line x1="'+L+'" x2="'+(W-10)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" style="stroke:var(--bd)"/><text x="'+(L-8)+'" y="'+(Y(v)+4)+'" text-anchor="end" font-size="11" style="fill:var(--mut)">'+v+'</text>';}
+ GP.forEach(function(g,i){svg+='<line x1="'+X(i)+'" x2="'+X(i)+'" y1="'+T+'" y2="'+(H-B)+'" stroke-dasharray="2 5" style="stroke:var(--bd)"/><text x="'+X(i)+'" y="'+(H-B+16)+'" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--tx)">'+(i+1)+'</text><text x="'+X(i)+'" y="'+(H-B+31)+'" text-anchor="middle" font-size="10" style="fill:var(--mut)">'+safeText(g.short)+'</text>';});
+ var cumulative=R.map(function(p){var a=0;return p.p.map(function(v){a+=v;return a;});});
+ R.forEach(function(p,k){svg+='<path d="'+cumulative[k].map(function(v,i){return (i?'L':'M')+X(i)+','+Y(v);}).join(' ')+'" fill="none" stroke="'+p.k+'" stroke-width="2.5" stroke-linejoin="round"/>';cumulative[k].forEach(function(v,i){svg+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="4" fill="'+p.k+'" style="stroke:var(--card)" stroke-width="1.5"/>';});});
+ GP.forEach(function(g,i){var it=R.map(function(p,k){return {k:k,y:Y(cumulative[k][i]),v:cumulative[k][i],q:p.p[i],m:p.r[i]};}).sort(function(a,b){return a.y-b.y;});it.forEach(function(o,j){o.t=o.y-22;if(j&&o.t<it[j-1].t+27)o.t=it[j-1].t+27;});if(it.length&&it[0].t<T-5){var f=T-5-it[0].t;it.forEach(function(o){o.t+=f;});}it.forEach(function(o){var x=X(i),c=R[o.k].k;if(Math.abs(o.t-(o.y-22))>3)svg+='<line x1="'+x+'" x2="'+x+'" y1="'+(o.y-4)+'" y2="'+(o.t+17)+'" stroke="'+c+'" stroke-width="1" opacity=".5"/>';svg+='<text x="'+x+'" y="'+(o.t+5)+'" text-anchor="middle" font-size="11" font-weight="700" fill="'+c+'" style="paint-order:stroke;stroke:var(--card);stroke-width:3px">'+o.v+'</text><text x="'+x+'" y="'+(o.t+16)+'" text-anchor="middle" font-size="9" style="fill:var(--mut);paint-order:stroke;stroke:var(--card);stroke-width:3px">'+(o.q?'+'+o.q:'—')+'</text>';if(o.m)svg+=cup(o.m).replace('<svg','<svg x="'+(x+5)+'" y="'+(o.y-2)+'" width="14" height="14"');});});
+ $("lc").innerHTML=svg+'</svg>';
+ $("lr").innerHTML=R.map(function(p){return '<span><i style="width:18px;height:4px;border-radius:2px;background:'+p.k+';display:inline-block"></i> '+safeText(p.n)+'</span>';}).join('');
+}
+function applyWorldModel(model){
+ STANDINGS=model.standings||[];GP=(model.events||[]).map(function(e){return {name:e.name,short:e.short};});R=model.riders||[];
+ if(!STANDINGS.length)throw new Error('El archivo de datos todavía no contiene clasificación.');
+ renderStandings();renderWorldGrid();lineChart();
+ var dt=model.updatedAt?new Date(model.updatedAt):null;
+ $("worldMeta").textContent='Temporada '+model.season+' · Última actualización de datos: '+(dt&&!isNaN(dt.getTime())?dt.toLocaleString('es-ES',{dateStyle:'short',timeStyle:'short'}):'pendiente');
+}
+function loadSavedWorld(){try{var x=JSON.parse(localStorage.getItem(WORLD_CACHE_KEY)||'null');if(x&&x.standings&&x.standings.length){applyWorldModel(x);return true;}}catch(e){}return false;}
+async function refreshWorld(){
+ worldStatus('Comprobando la última clasificación publicada…');$("refreshWorld").disabled=true;
+ try{
+   var url='./data/motogp-live.json?ts='+Date.now();var response=await fetch(url,{cache:'no-store'});
+   if(!response.ok)throw new Error('No se ha encontrado el archivo de datos (HTTP '+response.status+').');
+   var data=await response.json();if(!Array.isArray(data.standings)||!data.standings.length)throw new Error('El actualizador de GitHub todavía no ha publicado los primeros datos.');
+   var model=makeWorldModel(data);applyWorldModel(model);try{localStorage.setItem(WORLD_CACHE_KEY,JSON.stringify(model));}catch(e){}
+   worldStatus('Clasificación y puntos actualizados.');
+ }catch(err){var had=STANDINGS.length>0||loadSavedWorld();worldStatus((had?'No se pudo descargar la última versión. Se muestra la última copia guardada. ':'No se han podido cargar los datos. ')+(err&&err.message?err.message:'Comprueba la conexión.')+' Puedes consultar la clasificación oficial en stats.motogp.com.');}
+ finally{$("refreshWorld").disabled=false;}
+}
+$("refreshWorld").addEventListener('click',refreshWorld);
+var worldLastAttempt=0;
+function openWorld(){if(Date.now()-worldLastAttempt>60000){worldLastAttempt=Date.now();refreshWorld();}}
+function tab(n){[1,2,3].forEach(function(i){$("p"+i).hidden=n!==i;$("t"+i).className=n===i?"on":"";});if(n===2)openWorld();}
+$("t1").addEventListener("click",function(){tab(1);});
+$("t2").addEventListener("click",function(){tab(2);});
+$("t3").addEventListener("click",function(){tab(3);});
+render();
+loadSavedWorld();
+openWorld();
+</script>
+<script>
+(function(){
+  var installPrompt=null,btn=document.getElementById("installApp");
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();installPrompt=e;btn.hidden=false;});
+  btn.addEventListener("click",async function(){
+    if(!installPrompt){setStatus("Para instalar: abre el menú del navegador y elige «Instalar aplicación» o «Añadir a pantalla de inicio».");return;}
+    installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;btn.hidden=true;
+  });
+  window.addEventListener("appinstalled",function(){btn.hidden=true;setStatus("Aplicación instalada.")});
+  if("serviceWorker" in navigator){
+    window.addEventListener("load",function(){
+      navigator.serviceWorker.register("./sw.js?v=3").then(function(reg){
+        reg.update();
+        reg.addEventListener("updatefound",function(){
+          var worker=reg.installing;
+          if(worker)worker.addEventListener("statechange",function(){
+            if(worker.state==="installed"&&navigator.serviceWorker.controller)setStatus("Nueva versión instalada. Recarga para aplicarla.");
+          });
+        });
+      }).catch(function(){setStatus("No se pudo activar el modo PWA.")});
+    });
+  }
+})();
+</script>
+</body>
+</html>

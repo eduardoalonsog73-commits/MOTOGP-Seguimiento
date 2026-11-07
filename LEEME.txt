@@ -1,0 +1,40 @@
+MOTOGP PWA V3 — PUBLICACIÓN CON DATOS AUTOMÁTICOS
+
+QUÉ SE HA AÑADIDO
+- Clasificación completa del Mundial de pilotos, con posición, equipo, puntos y diferencia con el líder.
+- Gráfico de evolución de puntos acumulados para los cinco primeros.
+- Tabla de puntos obtenidos en cada Gran Premio.
+- Se suman los puntos oficiales de Sprint y carrera; se identifican los podios de la carrera.
+- GitHub Actions consulta los datos de MotoGP cada 15 minutos y actualiza data/motogp-live.json.
+- La PWA descarga ese JSON cada vez que se abre y también al pulsar «Actualizar Mundial».
+- El service worker usa caché de red primero para el JSON y conserva la última copia si no hay conexión.
+
+ARCHIVOS Y CARPETAS
+Sube todos los archivos y conserva exactamente esta estructura:
+- index.html
+- manifest.json
+- sw.js
+- icon-192.png
+- icon-512.png
+- data/motogp-live.json
+- scripts/update_motogp_data.py
+- .github/workflows/update-motogp-data.yml
+
+PUBLICACIÓN EN GITHUB
+1. Descomprime el ZIP.
+2. Sube/sustituye los archivos anteriores en la raíz del repositorio de GitHub Pages. Es importante incluir también las carpetas data, scripts y .github.
+3. En GitHub, abre la pestaña Actions del repositorio. Si aparece un aviso para habilitar workflows, habilítalos.
+4. Selecciona «Actualizar datos del Mundial MotoGP» y pulsa «Run workflow» para ejecutar la primera carga inmediatamente.
+5. Espera a que termine correctamente. El proceso inicial puede tardar más porque descarga los resultados de los Grandes Premios ya disputados.
+6. Comprueba que se ha actualizado data/motogp-live.json y que GitHub Pages publica ese archivo.
+7. Abre la PWA y entra en «Mundial por GP». Pulsa «Actualizar Mundial» si quieres forzar una nueva descarga del JSON publicado.
+
+ACTUALIZACIÓN AUTOMÁTICA
+El workflow está programado cada 15 minutos. GitHub puede retrasar ocasionalmente la ejecución programada. La aplicación descarga el último JSON publicado cada vez que se abre; por tanto, el dato mostrado puede tener hasta unos 15 minutos de antigüedad (más el posible retraso de GitHub Actions). Durante un Sprint o una carrera, la clasificación cambia cuando MotoGP publica la clasificación de esa sesión.
+
+FUENTE Y LIMITACIONES
+El actualizador usa la API de resultados de MotoGP/Pulselive: https://api.motogp.pulselive.com/motogp/v1. La API es una interfaz pública no documentada formalmente y puede cambiar. La web oficial publica también la clasificación en https://stats.motogp.com/en/world-standing.
+No se necesita clave API ni un servidor externo. GitHub Actions ejecuta el proceso y publica el JSON estático, evitando depender de CORS en el navegador. El workflow necesita permiso de escritura en el repositorio (se declara contents: write). Si la organización o la configuración del repositorio bloquea ese permiso, debe habilitarse en Settings > Actions > General > Workflow permissions > Read and write permissions.
+
+PWA Y CACHÉ
+Se ha incrementado la versión del service worker a motogp-v3 para retirar la caché antigua. Si el móvil conserva una versión anterior, cierra y vuelve a abrir la PWA con conexión. No borres el repositorio: solo sustituye/sube los archivos indicados.
